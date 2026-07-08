@@ -929,15 +929,7 @@ footer {
     display:block;
 }
 
-@media (max-width: 500px) {
-  .about-img-block {
-    aspect-ratio: 16 / 10;   /* keeps a consistent height on mobile, no empty gap below */
-    overflow: hidden;
-  }
-  .about-img {
-    object-position: center center;  /* recenter crop for mobile ratio */
-  }
-}
+
 </style>
     </div>
     <div class="reveal">
@@ -1033,7 +1025,7 @@ footer {
   pointer-events: none;
 }
 
-#smile-gallery .section-eyebrow { 
+#smile-gallery .section-eyebrow {
   justify-content: center;
   letter-spacing: 6px;
   font-size: 14px;
@@ -1042,6 +1034,7 @@ footer {
   display: flex;
   position: relative;
   z-index: 1;
+  white-space: nowrap;   /* keep it as one unbreakable line */
 }
 
 #smile-gallery .section-title {
@@ -1053,8 +1046,6 @@ footer {
   text-align: center;
   position: relative;
   z-index: 1;
-  word-break: keep-all;
-  overflow-wrap: break-word;
 }
 
 #smile-gallery .section-title em {
@@ -1120,22 +1111,11 @@ footer {
 }
 
 @media (max-width: 500px) {
-  #smile-gallery .section-eyebrow {
-    letter-spacing: 3px;   /* less spacing so it fits on one line */
-    white-space: normal;   /* allow wrap as a whole phrase, not per-letter */
-  }
   #smile-gallery .smile-gallery-grid {
     grid-template-columns: 1fr;
   }
   #smile-gallery .section-title {
-    font-size: 34px;       /* smaller than your current 40px, safer margin */
-    letter-spacing: 1px;
-  }
-}
-
-@media (max-width: 380px) {
-  #smile-gallery .section-title {
-    font-size: 28px;
+    font-size: 40px;
   }
 }
 </style>
