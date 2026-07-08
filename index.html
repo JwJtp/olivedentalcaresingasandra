@@ -927,11 +927,45 @@ footer {
 </div>
 <style>
  .about-img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    object-position:center -27px;
-    display:block;
+    width:100% !important;
+    height:100% !important;
+    object-fit:cover !important;
+    object-position:center -27px !important;
+    display:block !important;
+}
+/* ===== FINAL FIX: About image gallery — kill the green gap + crop reflection ===== */
+
+.about-img-block{
+  background: transparent !important;
+  overflow: hidden !important;
+  height: auto !important;
+  aspect-ratio: 4 / 3 !important;
+}
+
+.about-img-block:first-child{
+  aspect-ratio: 16 / 9 !important;
+}
+
+.about-img{
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  display: block !important;
+}
+
+/* "Always Smile" image specifically — crop out the reflection at the bottom */
+.about-img-block:nth-child(2) .about-img{
+  object-position: center 15% !important;
+}
+
+@media (max-width: 768px){
+  .about-img-block{
+    aspect-ratio: 4 / 3 !important;
+  }
+  .about-img-block:first-child{
+    aspect-ratio: 16 / 10 !important;
+  }
 }
 
 
