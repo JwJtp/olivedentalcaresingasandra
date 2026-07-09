@@ -37,6 +37,7 @@ body{
   color:var(--text);
   overflow-x:hidden;
 }
+
 /* ── CUSTOM CURSOR ── */
 .cursor{position:fixed;width:8px;height:8px;background:var(--olive);border-radius:50%;pointer-events:none;z-index:9999;transition:transform .15s;mix-blend-mode:multiply}
 .cursor-ring{position:fixed;width:32px;height:32px;border:1.5px solid var(--olive2);border-radius:50%;pointer-events:none;z-index:9998;transition:all .12s ease;mix-blend-mode:multiply}
@@ -45,20 +46,27 @@ body{
 nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
-  padding:20px 52px;
+  padding:14px 52px;
   background:rgba(247,244,238,0.88);
   backdrop-filter:blur(16px);
   border-bottom:1px solid var(--border);
   transition:padding .3s;
 }
-nav.scrolled{padding:14px 52px;box-shadow:0 2px 24px rgba(107,124,74,0.1)}
+nav.scrolled{padding:10px 52px;box-shadow:0 2px 24px rgba(107,124,74,0.1)}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+
+/* single, consistent logo-mark definition (removed the earlier conflicting 36px circle rule) */
 .logo-mark{
-  width:36px;height:36px;border-radius:50%;background:var(--olive);
-  display:flex;align-items:center;justify-content:center;font-size:1rem;color:#fff;
-  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;
+  width:52px;height:52px;border-radius:14px;
+  overflow:hidden;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--olive);
 }
-.logo-text{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;color:var(--charcoal);letter-spacing:.5px;margin-left:12px;  }
+.logo-mark img{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;color:var(--charcoal);letter-spacing:.5px;margin-left:4px}
 .logo-text span{color:var(--olive)}
 .nav-links{display:flex;gap:34px;list-style:none}
 .nav-links a{text-decoration:none;font-size:.88rem;font-weight:500;color:var(--muted);letter-spacing:.3px;transition:color .2s;position:relative}
@@ -98,9 +106,14 @@ nav.scrolled{padding:14px 52px;box-shadow:0 2px 24px rgba(107,124,74,0.1)}
   letter-spacing:.8px;text-transform:uppercase;margin-bottom:24px;
 }
 .hero-badge::before{content:'✦';font-size:.65rem}
+
+/* Fluid sizing with clamp() instead of separate fixed values per breakpoint —
+   this is what actually stops headings from feeling "cropped"/oversized on
+   in-between phone widths, since it scales smoothly instead of jumping. */
 .hero-title{
   font-family:'Cormorant Garamond',serif;
-  font-size:4.6rem;line-height:1.04;font-weight:600;
+  font-size:clamp(2.1rem, 6vw, 4.6rem);
+  line-height:1.1;font-weight:600;
   color:var(--charcoal);margin-bottom:24px;
 }
 .hero-title em{color:var(--olive);font-style:italic}
@@ -120,21 +133,18 @@ nav.scrolled{padding:14px 52px;box-shadow:0 2px 24px rgba(107,124,74,0.1)}
   cursor:pointer;letter-spacing:.3px;transition:all .25s;
 }
 .btn-outline:hover{background:var(--olive);color:#fff;transform:translateY(-2px)}
-.hero-stats{display:flex;gap:40px;margin-top:52px;padding-top:40px;border-top:1px solid var(--border)}
+.hero-stats{display:flex;gap:40px;margin-top:52px;padding-top:40px;border-top:1px solid var(--border);flex-wrap:wrap}
 .hero-stat-num{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;color:var(--charcoal);display:block}
 .hero-stat-label{font-size:.78rem;color:var(--muted);letter-spacing:.5px;font-weight:400}
 
 .hero-visual{position:relative;display:flex;justify-content:center;align-items:center}
 .hero-img-wrap{
-  width:460px;height:520px;border-radius:200px 200px 160px 160px;
+  width:100%;max-width:460px;height:520px;border-radius:200px 200px 160px 160px;
   background:linear-gradient(160deg, var(--sage2) 0%, var(--sage) 60%, var(--olive2) 100%);
   overflow:hidden;position:relative;
   box-shadow:0 32px 80px rgba(107,124,74,0.22);
 }
-.hero-img-overlay{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-size:9rem;opacity:.18;
-}
+.hero-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
 .hero-float-card{
   position:absolute;background:#fff;border-radius:16px;
   box-shadow:0 12px 40px rgba(0,0,0,0.1);padding:16px 20px;
@@ -154,86 +164,69 @@ section{padding:100px 52px}
   color:var(--olive2);margin-bottom:14px;display:flex;align-items:center;gap:10px;
 }
 .section-eyebrow::before{content:'';width:30px;height:1.5px;background:var(--olive2)}
+
+/* Single source of truth for .section-title (previously declared 3x with
+   conflicting fixed font-sizes: 3rem, then 4rem, then 2.2rem in a media query —
+   whichever won the cascade at a given width could clip/overflow on some
+   phones). clamp() replaces all three. */
 .section-title{
-  font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:600;
-  color:var(--charcoal);line-height:1.15;margin-bottom:16px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.9rem, 4.2vw, 3rem);
+  line-height:1.2;font-weight:600;
+  color:var(--charcoal);margin-bottom:16px;
+  overflow:visible;
 }
 .section-title em{color:var(--olive);font-style:italic}
 .section-sub{font-size:1rem;color:var(--muted);max-width:500px;line-height:1.75;font-weight:300}
+.section-sub2{
+  max-width:700px;margin:20px auto 0;text-align:center;
+  font-size:1.05rem;line-height:1.8;color:var(--muted);padding:0 20px;
+}
 
-/* ── SERVICES ── */
-.services {
-  background: linear-gradient(135deg, var(--olive) 0%, var(--olive3) 100%);
+/* ── SERVICES ──
+   (Removed the old duplicate ".services" block that set a dark olive
+   gradient background + white text — it conflicted with this light-cream
+   version and, depending on cascade order, could leave text nearly
+   invisible against the light card background.) */
+.services{
+  background:#F7F4EC;
+  padding:100px 7%;
 }
-.services .section-eyebrow{color:var(--sage)}
-.services .section-title{color:var(--ivory)}
-.services .section-sub{color:rgba(255,255,255,.45)}
-.services-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:60px;gap:30px}
-.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.services .section-eyebrow{color:#6F8752}
+.services .section-title{font-size:clamp(2rem, 4.5vw, 4rem)}
+.services .section-sub{color:#5C6657;max-width:430px;font-size:1.1rem;line-height:1.8}
+.services-header{display:flex;justify-content:space-between;align-items:flex-start;gap:50px;margin-bottom:60px;flex-wrap:wrap}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
 .service-card{
-  background:rgba(183, 24, 24, 0.05);border:1px solid rgba(255,255,255,.08);
-  border-radius:20px;padding:36px 32px;cursor:pointer;
-  transition:all .3s;position:relative;overflow:hidden;
+  background:#FAF8F3;border:1px solid #CBD7C1;
+  border-radius:22px;padding:35px;transition:.35s ease;
 }
-.service-card::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(184,201,160,.12),transparent);
-  opacity:0;transition:opacity .3s;
-}
-.service-card:hover{transform:translateY(-6px);border-color:rgba(184,201,160,.3)}
-.service-card:hover::before{opacity:1}
-.service-icon{
-  width:54px;height:54px;border-radius:14px;
-  background:rgba(184,201,160,.12);display:flex;
-  align-items:center;justify-content:center;font-size:1.5rem;
-  margin-bottom:22px;transition:background .3s;
-}
-.service-card:hover .service-icon{background:rgba(184,201,160,.22)}
-.service-name{font-size:1.12rem;font-weight:600;color:var(--ivory);margin-bottom:10px}
-.service-desc{font-size:.87rem;color:rgba(255,255,255,.4);line-height:1.7;margin-bottom:20px;font-weight:300}
-.service-price{font-size:.82rem;color:var(--sage);font-weight:500;letter-spacing:.3px}
-.service-arrow{float:right;color:rgba(255,255,255,.25);font-size:1.1rem;transition:all .3s}
-.service-card:hover .service-arrow{color:var(--sage);transform:translate(3px,-3px)}
+.service-card:hover{background:ivory;transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,.12)}
+.service-name{color:#5C6657;font-size:1.7rem;font-weight:700;margin-bottom:18px}
+.service-desc{color:#5C6657;line-height:1.9;font-size:1.03rem}
 
 /* ── ABOUT ── */
 .about{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
 .about-img-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* Consolidated about-image rules (previously defined 3+ times across the
+   stylesheet and again in an inline <style> inside the About section,
+   fighting over height / aspect-ratio and causing inconsistent crops across
+   screen sizes). This is now the only definition. */
 .about-img-block{
   border-radius:18px;overflow:hidden;background:var(--sage2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:3rem;color:var(--olive);
+  aspect-ratio:4/3;
 }
-.about-img-block:first-child{height:260px;grid-column:span 2;background:linear-gradient(135deg,var(--sage2),var(--sage))}
-.about-img-block:nth-child(2){height:160px}
-.about-img-block:nth-child(3){height:160px;background:linear-gradient(135deg,var(--olive2),var(--olive3));color:#fff}
+.about-img-block:first-child{grid-column:span 2;aspect-ratio:16/9}
+.about-img-block:nth-child(3){background:linear-gradient(135deg,var(--olive2),var(--olive3))}
+.about-img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+
 .about-list{list-style:none;display:flex;flex-direction:column;gap:14px;margin:28px 0 36px}
 .about-list li{display:flex;align-items:flex-start;gap:12px;font-size:.93rem;color:var(--text);line-height:1.6}
 .about-list li::before{content:'✓';width:22px;height:22px;background:var(--sage2);color:var(--olive3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;margin-top:2px}
 
-/* ── DOCTORS ── */
+/* ── DOCTORS / SMILE GALLERY SECTION WRAPPER ── */
 .doctors-section{background:var(--cream)}
-.doctors-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:60px}
-.doctor-card{
-  background:var(--white);border-radius:24px;overflow:hidden;
-  box-shadow:0 4px 24px rgba(107,124,74,.07);
-  transition:all .3s;border:1px solid var(--border);
-}
-.doctor-card:hover{transform:translateY(-8px);box-shadow:0 20px 48px rgba(107,124,74,.14)}
-.doctor-photo{
-  height:240px;background:linear-gradient(160deg,var(--sage2),var(--sage));
-  display:flex;align-items:center;justify-content:center;font-size:5rem;
-  position:relative;overflow:hidden;
-}
-.doctor-photo-overlay{
-  position:absolute;bottom:0;left:0;right:0;height:60%;
-  background:linear-gradient(transparent,rgba(107,124,74,.15));
-}
-.doctor-info{padding:24px}
-.doctor-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--charcoal);margin-bottom:3px}
-.doctor-role{font-size:.8rem;color:var(--olive2);font-weight:500;letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
-.doctor-exp{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:14px}
-.doctor-tags{display:flex;gap:6px;flex-wrap:wrap}
-.tag{padding:4px 10px;background:var(--sage2);color:var(--olive3);border-radius:50px;font-size:.72rem;font-weight:500}
 
 /* ── BOOKING ── */
 .booking-section{
@@ -255,7 +248,7 @@ section{padding:100px 52px}
   position:relative;z-index:1;
 }
 .booking-left .section-eyebrow{color:var(--sage2)}
-.booking-left .section-title{color:#fff;font-size:2.5rem}
+.booking-left .section-title{color:#fff;font-size:clamp(1.9rem,4vw,2.5rem)}
 .booking-left .section-sub{color:rgba(255,255,255,.65);margin-bottom:36px}
 .booking-info-list{list-style:none;display:flex;flex-direction:column;gap:16px}
 .booking-info-list li{display:flex;align-items:center;gap:14px;color:rgba(255,255,255,.8);font-size:.92rem}
@@ -308,12 +301,13 @@ section{padding:100px 52px}
 .testi-card{
   background:#fff;border-radius:20px;padding:30px;
   border:1px solid var(--border);transition:all .3s;
+  display:flex;flex-direction:column;height:100%;
 }
 .testi-card:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(107,124,74,.1)}
 .testi-stars{color:var(--gold);font-size:.85rem;margin-bottom:14px;letter-spacing:2px}
-.testi-text{font-size:.93rem;color:var(--text);line-height:1.75;margin-bottom:20px;font-weight:300;font-style:italic}
+.testi-text{font-size:.93rem;color:var(--text);line-height:1.75;margin-bottom:20px;font-weight:300;font-style:italic;flex-grow:1}
 .testi-text::before,.testi-text::after{content:'"';font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--sage);vertical-align:-.2em}
-.testi-author{display:flex;align-items:center;gap:12px}
+.testi-author{display:flex;align-items:center;gap:12px;margin-top:20px}
 .testi-avatar{
   width:42px;height:42px;border-radius:50%;
   background:var(--sage2);display:flex;align-items:center;
@@ -335,27 +329,29 @@ section{padding:100px 52px}
 .hours-table tr.today td:last-child{color:var(--olive)}
 .hours-closed{color:var(--muted)!important;font-style:italic}
 .map-placeholder{
-  width:100%;height:220px;border-radius:18px;
-  background:linear-gradient(135deg,var(--sage2),var(--sage));
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  font-size:2.5rem;margin:24px 0 18px;gap:10px;cursor:pointer;
+  width:100%;height:300px;border-radius:12px;
+  background:url("images/map.png") center/cover no-repeat;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  cursor:pointer;color:#fff;position:relative;overflow:hidden;
   border:1px solid var(--border);transition:all .3s;
-  position:relative;overflow:hidden;
 }
+.map-placeholder::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.4)}
+.map-placeholder>*{position:relative;z-index:1}
 .map-placeholder:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(107,124,74,.15)}
-.map-label{font-size:.85rem;color:var(--olive3);font-weight:500}
+.map-label{font-size:.85rem;font-weight:500}
 .contact-list{list-style:none;display:flex;flex-direction:column;gap:14px;margin-top:24px}
 .contact-list li{display:flex;align-items:center;gap:12px;font-size:.9rem;color:var(--text)}
 .contact-icon{width:36px;height:36px;border-radius:9px;background:var(--sage2);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
 
-/* ── FAQ ── */
+/* ── FAQ ──
+   (Merged three separate, overlapping .faq-q / .faq-a rules into one each.) */
 .faq-section{padding:100px 52px;background:var(--ivory)}
 .faq-wrap{max-width:740px;margin:48px auto 0}
 .faq-item{border-bottom:1px solid var(--border);overflow:hidden}
 .faq-q{
   display:flex;justify-content:space-between;align-items:center;
-  padding:22px 0;cursor:pointer;font-size:.97rem;font-weight:500;
-  color:var(--charcoal);transition:color .2s;
+  padding:22px 0;cursor:pointer;font-size:1.05rem;font-weight:600;
+  color:#1f2a1f;transition:color .2s;
   background:none;border:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;
 }
 .faq-q:hover{color:var(--olive)}
@@ -363,8 +359,8 @@ section{padding:100px 52px}
   display:flex;align-items:center;justify-content:center;font-size:.8rem;
   color:var(--olive);transition:all .3s;flex-shrink:0}
 .faq-item.open .faq-icon{transform:rotate(45deg);background:var(--olive);color:#fff;border-color:var(--olive)}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease;font-size:.9rem;color:var(--muted);line-height:1.75;font-weight:300}
-.faq-item.open .faq-a{max-height:200px;padding-bottom:20px}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease;font-size:1.05rem;color:#000;line-height:1.8;font-weight:300}
+.faq-item.open .faq-a{max-height:220px;padding-bottom:20px}
 
 /* ── FOOTER ── */
 footer {
@@ -377,13 +373,18 @@ footer {
 .footer-brand span{color:var(--sage)}
 .footer-tagline{font-size:.87rem;line-height:1.7;max-width:260px;font-weight:300;margin-bottom:24px}
 .footer-social{display:flex;gap:10px}
-.social-btn{width:36px;height:36px;border-radius:9px;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer;transition:all .2s;text-decoration:none;color:rgba(255,255,255,.6)}
-.social-btn:hover{background:var(--olive);border-color:var(--olive);color:#fff}
+.social-btn{
+  width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:#fff;overflow:hidden;transition:.3s ease;box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+.social-btn img{width:40px;height:40px;object-fit:contain;display:block;transition:.3s ease}
+.social-btn:hover{transform:translateY(-4px);box-shadow:0 10px 25px rgba(0,0,0,.25)}
+.social-btn:hover img{transform:scale(1.1)}
 .footer-col h5{font-size:.78rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;margin-bottom:18px}
 .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
 .footer-col ul li a{text-decoration:none;color:rgba(255,255,255,.5);font-size:.88rem;font-weight:300;transition:color .2s}
 .footer-col ul li a:hover{color:var(--sage)}
-.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:28px;font-size:.8rem}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:28px;font-size:.8rem;flex-wrap:wrap;gap:10px}
 .footer-bottom a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .2s}
 .footer-bottom a:hover{color:var(--sage)}
 
@@ -400,29 +401,82 @@ footer {
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
 .reveal.visible{opacity:1;transform:none}
 
-/* ── RESPONSIVE ── */
-@media(max-width:1100px){
-  .hero{grid-template-columns:1fr;padding:120px 32px 60px;text-align:center}
+/* ── SMILE GALLERY ── */
+#smile-gallery {
+  background: linear-gradient(135deg, var(--olive) 0%, var(--olive3) 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 80px 20px;
+}
+#smile-gallery::before {
+  content: '';position: absolute;right: -100px;top: -100px;
+  width: 500px;height: 500px;border-radius: 50%;
+  background: rgba(255, 255, 255, .05);pointer-events: none;
+}
+#smile-gallery::after {
+  content: '';position: absolute;left: -80px;bottom: -80px;
+  width: 360px;height: 360px;border-radius: 50%;
+  background: rgba(255, 255, 255, .04);pointer-events: none;
+}
+#smile-gallery .section-eyebrow {
+  justify-content: center;letter-spacing: 6px;font-size: 14px;color: white;
+  font-weight: 600;display: flex;position: relative;z-index: 1;white-space: nowrap;
+}
+#smile-gallery .section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 6vw, 4rem);
+  color: white;margin: 14px 0 24px;letter-spacing: 1px;
+  text-align: center;position: relative;z-index: 1;
+}
+#smile-gallery .section-title em{font-style:italic;color:var(--sage2)}
+#smile-gallery .section-sub2 {
+  margin: 0 auto 60px;text-align: center;max-width: 600px;
+  color: rgba(255, 255, 255, .8);font-size: 17px;line-height: 1.7;
+  position: relative;z-index: 1;
+}
+#smile-gallery .smile-gallery-grid {
+  display: grid;grid-template-columns: repeat(2, 1fr);gap: 20px;
+  max-width: 1100px;margin: 0 auto;position: relative;z-index: 1;
+}
+#smile-gallery .ba-item{position:relative}
+#smile-gallery .ba-item img{width:100%;height:auto;display:block;border-radius:16px}
+#smile-gallery .ba-tag {
+  position: absolute;top: 16px;left: 16px;padding: 6px 16px;
+  font-size: 13px;font-weight: 600;letter-spacing: 1px;
+  text-transform: uppercase;border-radius: 4px;color: white;
+}
+#smile-gallery .ba-tag.before{background:var(--olive2)}
+#smile-gallery .ba-tag.after{background:#6b8e23}
+
+/* ── RESPONSIVE ──
+   One consistent set of breakpoints (1024 / 768 / 480). The previous file
+   had TWO overlapping sets (1100/720 and 1024/768/480) plus a broken nested
+   @media block, which meant the winning rule at a given width was
+   unpredictable — that's the main reason things looked cropped/inconsistent
+   between different phones. */
+@media (max-width: 1024px){
+  .hero{grid-template-columns:1fr;text-align:center;padding:120px 32px 60px}
   .hero-visual{display:none}
   .hero-sub{margin:0 auto 40px}
   .hero-stats{justify-content:center}
   .hero-actions{justify-content:center}
-  .services-grid{grid-template-columns:1fr 1fr}
+  .services-grid{grid-template-columns:repeat(2,1fr)}
   .about{grid-template-columns:1fr;gap:40px;padding:80px 32px}
-  .doctors-grid{grid-template-columns:1fr 1fr}
+  .doctors-grid{grid-template-columns:repeat(2,1fr)}
   .booking-inner{grid-template-columns:1fr;gap:40px}
-  .testi-grid{grid-template-columns:1fr 1fr}
+  .testi-grid{grid-template-columns:repeat(2,1fr)}
   .info-section{grid-template-columns:1fr}
   .info-block:first-child{border-right:none;border-bottom:1px solid var(--border)}
   .footer-top{grid-template-columns:1fr 1fr;gap:36px}
-  nav{padding:16px 24px}
-  nav.scrolled{padding:12px 24px}
+  nav{padding:14px 24px}
+  nav.scrolled{padding:10px 24px}
   section{padding:70px 32px}
+  .about-img-block:first-child{aspect-ratio:16/9}
 }
-@media(max-width:720px){
+
+@media (max-width: 768px){
   .nav-links,.nav-cta{display:none}
   .hamburger{display:flex}
-  .hero-title{font-size:3rem}
   .services-grid{grid-template-columns:1fr}
   .doctors-grid{grid-template-columns:1fr}
   .testi-grid{grid-template-columns:1fr}
@@ -434,363 +488,19 @@ footer {
   .hero-stats{gap:24px}
   .faq-section{padding:70px 24px}
   .booking-section{padding:70px 24px}
-}
-.logo-mark{
-    width:80px;
-    height:80px;
-    overflow:visible;
-   
+  section{padding:70px 20px}
+  .about-img-grid{grid-template-columns:1fr}
+  .about-img-block:first-child{grid-column:span 1;aspect-ratio:16/10}
+  #smile-gallery .smile-gallery-grid{grid-template-columns:1fr}
 }
 
-.logo-mark img{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    transform:none;
-    border-radius:22px;
-}
-.about-img-block:first-child{
-    height:400px;
-}
-
-.about-img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-}
-.hero-img-wrap img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-}
-<!---servic-->
-/* ===========================
-   SERVICES SECTION
-=========================== */
-
-.services{
-    background:#F7F4EC;
-    padding:100px 7%;
-}
-
-.services-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:50px;
-    margin-bottom:60px;
-    flex-wrap:wrap;
-}
-
-.section-eyebrow{
-    color:#6F8752;
-    font-weight:600;
-    letter-spacing:2px;
-    text-transform:uppercase;
-    margin-bottom:10px;
-}
-
-.section-title{
-    font-size:4rem;
-   
-    line-height:1.1;
-}
-
-.section-title em{
-    color:rgba(2, 57, 0, 0.959);
-    font-style:italic;
-}
-
-.section-sub{
-    max-width:430px;
-    color:#5C6657 !important;
-    font-size:1.1rem;
-    line-height:1.8;
-}
-
-/* Grid */
-
-.services-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:30px;
-}
-
-/* Cards */
-
-.service-card{
-  background: #FAF8F3;
-    border:1px solid #CBD7C1;
-    border-radius:22px;
-    padding:35px;
-    transition:.35s ease;
-}
-
-.service-card:hover{
-    background: ivory;
-    transform:translateY(-8px);
-    box-shadow:0 20px 40px rgba(0,0,0,.12);
-}
-
-.service-name{
-      color:#5C6657;
-    font-size:1.7rem;
-    font-weight:700;
-    margin-bottom:18px;
-}
-
-.service-desc{
-    color:#5C6657;
-    line-height:1.9;
-    font-size:1.03rem;
-}
-.section-sub{
-    color: #ffffff !important;
-}
-.faq-a{
-    color:#000;
-}
-.faq-q{
-    font-size:1.25rem;   /* was 1.1rem */
-    font-weight:600;
-    color:#1f2a1f;
-    margin-bottom:10px;
-}
-
-.faq-a{
-    font-size:1.05rem;   /* was 0.98rem */
-    line-height:1.8;
-    color:#000;
-}
-.faq-a{
-    font-size:1.15rem;   /* increase answer text */
-    line-height:1.8;
-    color:#000;
-}
-.section-sub2{
-    max-width:700px;          /* Controls text width */
-    margin:20px auto 0;
-    text-align:center;
-    font-size:18px;
-    line-height:1.8;
-    color:#666;
-    padding:0 20px;
-}
-/* Tablet */
-@media (max-width:768px){
-    .section-sub2{
-        max-width:90%;
-        font-size:17px;
-        line-height:1.7;
-    }
-}
-
-/* Mobile */
-@media (max-width:480px){
-    .section-sub2{
-        max-width:100%;
-        font-size:16px;
-        line-height:1.6;
-        padding:0 15px;
-    }
-    
-/* =========================
-   LAPTOP (default already)
-========================= */
-
-
-/* =========================
-   TABLET (768px - 1024px)
-========================= */
-@media (max-width: 1024px){
-
-  .hero{
-    grid-template-columns:1fr;
-    text-align:center;
-    padding:120px 30px 60px;
-  }
-
-  .hero-visual{
-    display:none;
-  }
-
-  .hero-title{
-    font-size:3.5rem;
-  }
-
-  .services-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .doctors-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .testi-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .about{
-    grid-template-columns:1fr;
-    gap:40px;
-  }
-
-  .booking-inner{
-    grid-template-columns:1fr;
-  }
-
-  .footer-top{
-    grid-template-columns:1fr 1fr;
-  }
-}
-
-
-/* =========================
-   MOBILE (max 768px)
-========================= */
-@media (max-width: 768px){
-
-  nav{
-    padding:12px 20px;
-  }
-
-  .nav-links,
-  .nav-cta{
-    display:none;
-  }
-
-  .hamburger{
-    display:flex;
-  }
-
-  .hero-title{
-    font-size:2.6rem;
-  }
-
-  .hero-sub{
-    font-size:1rem;
-  }
-
-  section{
-    padding:70px 20px;
-  }
-
-  .services-grid{
-    grid-template-columns:1fr;
-  }
-
-  .doctors-grid{
-    grid-template-columns:1fr;
-  }
-
-  .testi-grid{
-    grid-template-columns:1fr;
-  }
-
-  .form-grid{
-    grid-template-columns:1fr;
-  }
-
-  .form-group.full{
-    grid-column:span 1;
-  }
-
-  .info-section{
-    grid-template-columns:1fr;
-  }
-
-  .info-block{
-    padding:40px 20px;
-  }
-
-  .faq-section{
-    padding:60px 20px;
-  }
-
-  .booking-form{
-    padding:25px;
-  }
-}
-
-
-/* =========================
-   SMALL MOBILE (max 480px)
-========================= */
 @media (max-width: 480px){
-
-  .hero-title{
-    font-size:2.2rem;
-  }
-
-  .hero-stats{
-    flex-direction:column;
-    gap:20px;
-  }
-
-  .section-title{
- 
-    font-size:2.2rem;
-  }
-
-  .services-header{
-    flex-direction:column;
-  }
-
-  .service-card{
-    padding:25px;
-  }
-
-  .doctor-photo{
-    height:200px;
-  }
-
-  .footer-top{
-    grid-template-columns:1fr;
-  }
-
-  .map-placeholder{
-    height:180px;
-  }
-}
-/* LAPTOP (default already fine) */
-
-.about-img-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:14px;
-}
-
-/* TABLET */
-@media (max-width:1024px){
-    .about-img-grid{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .about-img-block:first-child{
-        grid-column:span 2;
-        height:300px;
-    }
-}
-
-/* MOBILE */
-@media (max-width:768px){
-    .about-img-grid{
-        grid-template-columns:1fr;
-    }
-
-    .about-img-block{
-        height:220px;
-    }
-
-    .about-img-block:first-child{
-        grid-column:span 1;
-        height:240px;
-    }
-}
-
-
+  .hero-stats{flex-direction:column;gap:20px}
+  .services-header{flex-direction:column}
+  .service-card{padding:25px}
+  .doctor-photo{height:200px}
+  .footer-top{grid-template-columns:1fr}
+  .map-placeholder{height:180px}
 }
 </style>
 </head>
@@ -803,7 +513,8 @@ footer {
 <nav id="navbar">
   <a href="#" class="nav-logo">
     <div class="logo-mark">
-    <img src="images/logo2.jpeg" alt="Clinic Logo"></div>
+      <img src="images/logo2.jpeg" alt="Clinic Logo">
+    </div>
     <span class="logo-text">Olive <span>Dental</span></span>
   </a>
   <ul class="nav-links">
@@ -819,7 +530,6 @@ footer {
   </button>
 </nav>
 
-
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobile-menu">
   <a href="#services" onclick="toggleMenu()">Services</a>
@@ -827,13 +537,12 @@ footer {
   <a href="#smile-gallery" onclick="toggleMenu()">Our Team</a>
   <a href="#testimonials" onclick="toggleMenu()">Reviews</a>
   <a href="#contact" onclick="toggleMenu()">Contact</a>
-  <a href="#booking"  onclick="toggleMenu()">📅 Book Appointment</a>
+  <a href="#booking" onclick="toggleMenu()">📅 Book Appointment</a>
 </div>
 
 <!-- HERO -->
 <section class="hero" id="home">
   <div class="hero-content reveal">
-    
     <h1 class="hero-title">Your Smile<br>Deserves <em>Expert</em><br>Care.</h1>
     <p class="hero-sub">At Olive Dental, we combine the latest technology with a gentle, patient-first approach to create beautiful, healthy smiles you'll love for life.</p>
     <div class="hero-actions">
@@ -852,10 +561,9 @@ footer {
   </div>
   <div class="hero-visual">
     <div class="hero-img-wrap">
-   <img src="https://plus.unsplash.com/premium_photo-1674998806375-58edc35ddf3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Clinic Logo" alt="Clinic Logo">
-
-      
-   
+      <img src="https://plus.unsplash.com/premium_photo-1674998806375-58edc35ddf3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Clinic showcase">
+    </div>
+  </div>
 </section>
 
 <!-- SERVICES -->
@@ -863,51 +571,34 @@ footer {
   <div class="services-header reveal">
     <div>
       <div class="section-eyebrow">What We Offer</div>
-      <h2 class="section-title" style="color:var(--ivory)">Complete Dental <em>Services</em></h2>
+      <h2 class="section-title">Complete Dental <em>Services</em></h2>
     </div>
-    <p class="section-sub" style="color:rgba(255,255,255,.45)">From routine cleanings to advanced cosmetic treatments — everything under one roof.</p>
+    <p class="section-sub">From routine cleanings to advanced cosmetic treatments — everything under one roof.</p>
   </div>
   <div class="services-grid">
     <div class="service-card reveal">
-    
       <div class="service-name">General Dentistry</div>
-      <div class="service-desc"> General dentistry focuses on maintaining your oral health through
-            preventive, diagnostic, and restorative dental care. Our experienced
-            dentists provide comprehensive treatments to keep your teeth and gums
-            healthy for a lifetime.</div>
-
+      <div class="service-desc">General dentistry focuses on maintaining your oral health through preventive, diagnostic, and restorative dental care. Our experienced dentists provide comprehensive treatments to keep your teeth and gums healthy for a lifetime.</div>
     </div>
     <div class="service-card reveal">
-      
       <div class="service-name">Teeth Whitening</div>
-      <div class="service-desc"> Brighten your smile with our advanced teeth whitening treatments.
-        Remove stains caused by coffee, tea, smoking, and everyday food habits
-        to achieve a whiter, more confident smile..</div>
-
+      <div class="service-desc">Brighten your smile with our advanced teeth whitening treatments. Remove stains caused by coffee, tea, smoking, and everyday food habits to achieve a whiter, more confident smile.</div>
     </div>
     <div class="service-card reveal">
-     
       <div class="service-name">Braces and Aligners</div>
-      <div class="service-desc"> Transform your smile with personalized care. Whether you choose traditional braces or discreet clear aligners, our treatment plans are designed to gently correct misaligned teeth, improve your bite, and enhance your confidence. We monitor your progress closely to ensure comfortable and effective results.</div>
-
+      <div class="service-desc">Transform your smile with personalized care. Whether you choose traditional braces or discreet clear aligners, our treatment plans are designed to gently correct misaligned teeth, improve your bite, and enhance your confidence. We monitor your progress closely to ensure comfortable and effective results.</div>
     </div>
     <div class="service-card reveal">
-     
       <div class="service-name">Dental Implants</div>
       <div class="service-desc">Dental implants are the gold standard for replacing missing teeth. They provide a permanent, secure, and natural-looking solution that restores your smile, confidence, and ability to eat and speak comfortably.</div>
-   
     </div>
     <div class="service-card reveal">
-      
       <div class="service-name">Root Canal Therapy</div>
       <div class="service-desc">Protect your natural smile with safe and effective root canal treatment. Our advanced techniques remove infection from inside the tooth, relieve pain, and preserve your tooth's structure. We ensure a comfortable procedure and restore your tooth with a durable filling or crown for long-lasting results.</div>
-
     </div>
     <div class="service-card reveal">
-     
       <div class="service-name">Crowns & Veneers</div>
       <div class="service-desc">Enhance the strength, function, and beauty of your smile with our premium dental crowns and veneers. Whether you need to restore a damaged tooth or achieve a flawless smile makeover, our customized solutions provide natural-looking and long-lasting results.</div>
-
     </div>
   </div>
 </section>
@@ -916,67 +607,15 @@ footer {
 <section id="about" style="padding:100px 52px">
   <div class="about">
     <div class="about-img-grid reveal">
-        <div class="about-img-block">
-    <img src="images/equip.jpg" alt="Hospital" class="about-img">
-</div>
       <div class="about-img-block">
-    <img src="images/smile2.jpeg" class="about-img">
-</div>
-     <div class="about-img-block">
-    <img src="images/clinic.jpg" alt="Hospital" class="about-img">
-</div>
-<style>
-
-/* ===== FINAL FIX: About image gallery — kill the green gap + crop reflection ===== */
-
-.about-img-block{
-  background: transparent !important;
-  overflow: hidden !important;
-  height: auto !important;
-  aspect-ratio: 4 / 3 !important;
-}
-
-.about-img-block:first-child{
-  aspect-ratio: 16 / 9 !important;
-}
-
-.about-img{
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  object-position: center top !important;
-  display: block !important;
-}
-
-/* "Always Smile" image specifically — crop out the reflection at the bottom */
-
-/* "Always Smile" image — crop reflection on ALL screen sizes */
-/* Always Smile image */
-.about-img-block:nth-child(2){
-    height: 190px !important;   /* Reduce height */
-    aspect-ratio: unset !important;
-    overflow: hidden !important;
-}
-
-.about-img-block:nth-child(2) .about-img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    display: block;
-}
-
-@media (max-width: 768px){
-  .about-img-block{
-    aspect-ratio: 4 / 3 !important;
-  }
-  .about-img-block:first-child{
-    aspect-ratio: 16 / 10 !important;
-  }
-}
-
-
-</style>
+        <img src="images/equip.jpg" alt="Clinic equipment" class="about-img">
+      </div>
+      <div class="about-img-block">
+        <img src="images/smile2.jpeg" alt="Patient smile" class="about-img">
+      </div>
+      <div class="about-img-block">
+        <img src="images/clinic.jpg" alt="Clinic interior" class="about-img">
+      </div>
     </div>
     <div class="reveal">
       <div class="section-eyebrow">Who We Are</div>
@@ -987,7 +626,6 @@ footer {
         <li>Fully sterilized, hospital-grade clean environment</li>
         <li>Strict sterilization and hygiene protocols</li>
         <li>Easy to find with Google Maps navigation</li>
-
         <li>Easy EMI payment options available</li>
         <li>Gentle treatment for children and anxious patients</li>
       </ul>
@@ -1000,693 +638,142 @@ footer {
 
 <!-- SMILE GALLERY SECTION -->
 <section class="doctors-section" id="smile-gallery">
-
   <div class="reveal" style="text-align:center">
     <div class="section-eyebrow">S M I L E&nbsp;&nbsp; G A L L E R Y</div>
-
-    <h1 class="section-title">
-      Beautiful <em>Transformations</em>
-    </h1>
-
-    <p class="section-sub2">
-      Explore some of the amazing smile makeovers and dental treatments completed for our patients.
-    </p>
+    <h1 class="section-title">Beautiful <em>Transformations</em></h1>
+    <p class="section-sub2">Explore some of the amazing smile makeovers and dental treatments completed for our patients.</p>
   </div>
-
   <div class="smile-gallery-grid">
-
     <div class="ba-item reveal">
       <img src="images/new1b.jpeg" alt="Before - Gap Closure">
       <span class="ba-tag before">Before</span>
     </div>
-
     <div class="ba-item reveal">
       <img src="images/new1a.jpeg" alt="After - Gap Closure">
       <span class="ba-tag after">After</span>
     </div>
-
     <div class="ba-item reveal">
       <img src="images/new22b.jpeg" alt="Before - Implant Placement">
       <span class="ba-tag before">Before</span>
     </div>
-
     <div class="ba-item reveal">
       <img src="images/new22a.jpeg" alt="After - Implant Restoration">
       <span class="ba-tag after">After</span>
     </div>
-
   </div>
-
 </section>
-
-<style>
-#smile-gallery {
-  background: linear-gradient(135deg, var(--olive) 0%, var(--olive3) 100%);
-  position: relative;
-  overflow: hidden;
-  padding: 80px 20px;
-}
-
-#smile-gallery::before {
-  content: '';
-  position: absolute;
-  right: -100px;
-  top: -100px;
-  width: 500px;
-  height: 500px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, .05);
-  pointer-events: none;
-}
-
-#smile-gallery::after {
-  content: '';
-  position: absolute;
-  left: -80px;
-  bottom: -80px;
-  width: 360px;
-  height: 360px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, .04);
-  pointer-events: none;
-}
-
-#smile-gallery .section-eyebrow {
-  justify-content: center;
-  letter-spacing: 6px;
-  font-size: 14px;
-  color: white;
-  font-weight: 600;
-  display: flex;
-  position: relative;
-  z-index: 1;
-  white-space: nowrap;   /* keep it as one unbreakable line */
-}
-
-#smile-gallery .section-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 64px;
-  color: white;
-  margin: 14px 0 24px;
-  letter-spacing: 2px;
-  text-align: center;
-  position: relative;
-  z-index: 1;
-}
-
-#smile-gallery .section-title em {
-  font-style: italic;
-}
-
-#smile-gallery .section-sub2 {
-  margin: 0 auto 60px;
-  text-align: center;
-  max-width: 600px;
-  color: rgba(255, 255, 255, .8);
-  font-size: 17px;
-  line-height: 1.7;
-  position: relative;
-  z-index: 1;
-}
-
-#smile-gallery .smile-gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  max-width: 1100px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-
-#smile-gallery .ba-item {
-  position: relative;
-}
-
-#smile-gallery .ba-item img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-#smile-gallery .ba-tag {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  padding: 6px 16px;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  border-radius: 4px;
-  color: white;
-}
-
-#smile-gallery .ba-tag.before {
-  background:var(--olive2);
-}
-
-#smile-gallery .ba-tag.after {
-  background:  #6b8e23;
-}
-#smile-gallery .ba-item img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 16px;
-}
-
-@media (max-width: 500px) {
-  #smile-gallery .smile-gallery-grid {
-    grid-template-columns: 1fr;
-  }
-  #smile-gallery .section-title {
-    font-size: 40px;
-  }
-}
-</style>
-
 
 <!-- BOOKING -->
 <section class="booking-section" id="booking">
-
   <div class="booking-inner">
-
     <!-- LEFT SIDE -->
     <div class="booking-left reveal">
-
-      <div class="section-eyebrow">
-        Easy Online Booking
-      </div>
-
-      <h2 class="section-title">
-        Book Your
-        <em style="font-style:italic;color:var(--sage2)">
-          Appointment
-        </em>
-      </h2>
-
-      <p class="section-sub">
-        Choose a convenient time and one of our specialists
-        will confirm your appointment shortly.
-      </p>
-
+      <div class="section-eyebrow">Easy Online Booking</div>
+      <h2 class="section-title">Book Your <em style="color:var(--sage2)">Appointment</em></h2>
+      <p class="section-sub">Choose a convenient time and one of our specialists will confirm your appointment shortly.</p>
       <ul class="booking-info-list">
-
-      <li>
-  <div class="bi-icon">
-    <span class="fa-solid fa-location-dot">📍</span>
-  </div>
-  Bengaluru, Karnataka
-</li>
-
-<li>
-  <div class="bi-icon">
-    <i class="fa-solid fa-phone">📞</i>
-  </div>
- <b style="
-      color:#ffffff;
-      font-weight:900;
-      text-shadow:
-          0 0 3px rgba(255,255,255,0.8),
-          0 0 8px rgba(255,255,255,0.4);
-      letter-spacing:0.3px;
-  ">
-      +91 6361169798
-  </b>
-  
-</li>
-
-        
-
-
-<li>
-  <div class="bi-icon">
-    <span class="fa-solid fa-days">🗓️</span>
-  </div>
-  <span>Mon – Sat</span>
-</li>
-<li>
-  <div class="bi-icon">
-    <span class="fa-solid fa-timings">🕐</span>
-  </div>
-    <span>10 AM – 9 PM</span>
-</li>
-
-
-</li>
-
+        <li>
+          <div class="bi-icon">📍</div>
+          Bengaluru, Karnataka
+        </li>
+        <li>
+          <div class="bi-icon">📞</div>
+          <b style="color:#ffffff;font-weight:900;letter-spacing:.3px">+91 6361169798</b>
+        </li>
+        <li>
+          <div class="bi-icon">🗓️</div>
+          <span>Mon – Sat</span>
+        </li>
+        <li>
+          <div class="bi-icon">🕐</div>
+          <span>10 AM – 9 PM</span>
+        </li>
       </ul>
-
     </div>
-
-<style>
-.booking-info{
-    list-style:none;
-    padding:0;
-    margin:35px 0;
-}
-
-.booking-info li{
-    display:flex;
-    align-items:center;
-    gap:18px;
-    margin-bottom:22px;
-}
-
-.bi-icon{
-    width:50px;
-    min-width:50px;
-    height:50px;
-    border-radius:50%;
-    background:rgba(255,255,255,.08);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:#ff5ca8;
-    font-size:18px;
-    flex-shrink:0;
-}
-
-.booking-info li span{
-    color:#fff;
-    font-size:22px;
-    white-space:nowrap;   /* Prevents wrapping */
-}
-</style>
 
     <!-- RIGHT SIDE -->
     <div class="booking-form reveal">
-
       <!-- FORM -->
       <div id="booking-form-inner">
-
-        <div class="form-title">
-          Schedule a Visit
-        </div>
-
+        <div class="form-title">Schedule a Visit</div>
         <div class="form-grid">
-
-          <!-- FIRST NAME -->
           <div class="form-group">
-
             <label>First Name</label>
-
-            <input
-            type="text"
-            id="fname">
-            
-
+            <input type="text" id="fname">
           </div>
-
-
-          <!-- LAST NAME -->
           <div class="form-group">
-
             <label>Last Name</label>
-
-            <input
-            type="text"
-            id="lname">
-           
-
+            <input type="text" id="lname">
           </div>
-
-
-          <!-- PHONE -->
           <div class="form-group">
-
             <label>Phone Number</label>
-
-            <input
-            type="tel"
-            id="phone">
-           
-
+            <input type="tel" id="phone">
           </div>
-
-
-          <!-- EMAIL -->
           <div class="form-group">
-
             <label>Email</label>
-
-            <input
-            type="email"
-            id="email">
-            
-
+            <input type="email" id="email">
           </div>
-
-
-          <!-- SERVICE -->
           <div class="form-group">
-
             <label>Service Required</label>
-
             <select id="service">
-
-              <option value="">
-                -- Select Service --
-              </option>
-
-              <option>
-                Consultation
-              </option>
-
-              <option>
-                Digital X-ray
-              </option>
-
-              <option>
-              Teeth Whitening
-              </option>
-
-              <option>
-                Root Canal Treatment
-              </option>
-
-              <option>
-                Braces and Clear Aligners
-              </option>
-                 
-              <option>
-                Crowns and Veneers
-              </option>
-
-                 <option>
-                Dental Implants
-              </option>
-
-                 <option>
-                Dental Dentistry
-              </option>  
-                 
-                     <option>
-               Laser Dentistry
-              </option>
-
-                   <option>
-               Intraoral Scanning
-              </option>
-
-                  <option>
-                Paediatic Dentistry
-              </option>
-
-                 <option>
-                Oral Surgeries
-              </option>
- 
+              <option value="">-- Select Service --</option>
+              <option>Consultation</option>
+              <option>Digital X-ray</option>
+              <option>Teeth Whitening</option>
+              <option>Root Canal Treatment</option>
+              <option>Braces and Clear Aligners</option>
+              <option>Crowns and Veneers</option>
+              <option>Dental Implants</option>
+              <option>Dental Dentistry</option>
+              <option>Laser Dentistry</option>
+              <option>Intraoral Scanning</option>
+              <option>Paediatic Dentistry</option>
+              <option>Oral Surgeries</option>
             </select>
-
           </div>
-
-
-          <!-- DATE -->
           <div class="form-group">
-
             <label>Preferred Date</label>
-
-            <input
-            type="date"
-            id="date">
-
+            <input type="date" id="date">
           </div>
-
-
-          <!-- TIME -->
           <div class="form-group">
-
             <label>Preferred Time</label>
-
             <select id="time">
-
-              <option value="">
-                -- Select Time --
-              </option>
-
-               
+              <option value="">-- Select Time --</option>
               <option>10:00 AM</option>
               <option>11:00 AM</option>
               <option>12:00 PM</option>
               <option>1:00 PM</option>
               <option>2:00 PM</option>
-               <option>3:00 PM</option>
+              <option>3:00 PM</option>
               <option>4:00 PM</option>
-               <option>5:00 PM</option>
+              <option>5:00 PM</option>
               <option>6:00 PM</option>
-               <option>7:00 PM</option>
+              <option>7:00 PM</option>
               <option>8:00 PM</option>
-
             </select>
-
           </div>
-
-
-          <!-- NOTES -->
           <div class="form-group full">
-
-            <label>
-              Additional Notes
-            </label>
-
-            <textarea
-            id="notes"
-            placeholder="Any dental concerns..."></textarea>
-
+            <label>Additional Notes</label>
+            <textarea id="notes" placeholder="Any dental concerns..."></textarea>
           </div>
-
         </div>
-
-
-        <!-- BUTTON -->
-        <button
-        type="button"
-        class="form-submit"
-        onclick="submitBooking()">
-
-          Confirm Appointment
-
-        </button>
-
+        <button type="button" class="form-submit" onclick="submitBooking()">Confirm Appointment</button>
       </div>
-
-
 
       <!-- SUCCESS -->
-      <div
-      class="booking-success"
-      id="booking-success">
-
-        <div class="success-icon">
-          
-        </div>
-
-        <div class="success-title">
-          Appointment Requested!
-        </div>
-
+      <div class="booking-success" id="booking-success">
+        <div class="success-icon">✅</div>
+        <div class="success-title">Appointment Requested!</div>
         <p class="success-msg">
-
-          Thank you
-          <strong id="success-name"></strong>
-
+          Thank you <strong id="success-name"></strong>
           <br><br>
-
           We will contact you shortly.
-
         </p>
-
-        <button
-        class="btn-primary"
-        onclick="resetForm()">
-
-          Book Another
-
-        </button>
-
+        <button class="btn-primary" onclick="resetForm()">Book Another</button>
       </div>
-
     </div>
-
   </div>
-
 </section>
-
-
-
-<!-- =========================
-     EXTRA CSS
-========================= -->
-
-<style>
-  
-
-
-</style>
-
-
-
-<!-- =========================
-     JAVASCRIPT
-========================= -->
-
-<script>
-
-function submitBooking(){
-
-  /* GET VALUES */
-
-  const fname =
-  document.getElementById("fname").value;
-
-  const lname =
-  document.getElementById("lname").value;
-
-  const phone =
-  document.getElementById("phone").value;
-
-  const email =
-  document.getElementById("email").value;
-
-  const service =
-  document.getElementById("service").value;
-
-  const date =
-  document.getElementById("date").value;
-
-  const time =
-  document.getElementById("time").value;
-
-  const notes =
-  document.getElementById("notes").value;
-
-
-
-  /* VALIDATION */
-
-  if(
-    fname === "" ||
-    phone === "" ||
-    email === "" ||
-    service === "" ||
-    date === "" ||
-    time === ""
-  ){
-
-    alert(
-      "Please fill all required fields."
-    );
-
-    return;
-  }
-
-
-
-  /* SUCCESS */
-
-  document.getElementById(
-    "success-name"
-  ).innerHTML =
-  fname + " " + lname;
-
-
-  document.getElementById(
-    "booking-form-inner"
-  ).style.display = "none";
-
-
-  document.getElementById(
-    "booking-success"
-  ).style.display = "flex";
-
-
-
-  /* WHATSAPP */
-
-  const whatsappNumber =
-  "916361169798";
-
-
-  const message =
-`Hello Olive Dental Clinic 
-
-New Appointment Request 🦷
-
-👤 Name:
-${fname} ${lname}
-
-📞 Phone:
-${phone}
-
-📧 Email:
-${email}
-
-🩺 Service:
-${service}
-
-📅 Date:
-${date}
-
-⏰ Time:
-${time}
-
-📝 Notes:
-${notes}`;
-
-
-
-  /* UPDATED DIRECT WHATSAPP WEB */
-
- const whatsappURL =
-`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-
-
-  /* OPEN DIRECTLY */
-
-  window.open(
-    whatsappURL,
-    "_blank"
-  );
-
-}
-
-
-
-/* RESET */
-
-function resetForm(){
-
-  document.getElementById(
-    "booking-form-inner"
-  ).style.display = "block";
-
-
-  document.getElementById(
-    "booking-success"
-  ).style.display = "none";
-
-
-  document.getElementById("fname").value = "";
-
-  document.getElementById("lname").value = "";
-
-  document.getElementById("phone").value = "";
-
-  document.getElementById("email").value = "";
-
-  document.getElementById("service").value = "";
-
-  document.getElementById("date").value = "";
-
-  document.getElementById("time").value = "";
-
-  document.getElementById("notes").value = "";
-
-}
-
-</script>
 
 <!-- TESTIMONIALS -->
 <section class="testimonials" id="testimonials">
@@ -1697,45 +784,21 @@ function resetForm(){
   <div class="testi-grid">
     <div class="testi-card reveal">
       <div class="testi-stars">★★★★★</div>
-      <p class="testi-text">"I went for teeth cleaning and stain removal. The clinic was clean and well-maintained, the staff were friendly and professional, and the dentist did an excellent job. I am very happy with the results and would highly recommend this clinic to anyone looking for quality dental care."</p>
-      <div class="testi-author"><div class="testi-avatar">AK</div><div><div class="testi-name">— Arshath Khan </div><div class="testi-date">34 weeks ago</div></div></div>
+      <p class="testi-text">I went for teeth cleaning and stain removal. The clinic was clean and well-maintained, the staff were friendly and professional, and the dentist did an excellent job. I am very happy with the results and would highly recommend this clinic to anyone looking for quality dental care.</p>
+      <div class="testi-author"><div class="testi-avatar">AK</div><div><div class="testi-name">— Arshath Khan</div><div class="testi-date">34 weeks ago</div></div></div>
     </div>
     <div class="testi-card reveal">
       <div class="testi-stars">★★★★★</div>
-      <p class="testi-text">"I am extremely happy with the service. The doctor was kind, communicative, and understanding, making me feel comfortable throughout the treatment. I used to be afraid of hospitals, but this experience completely changed my perspective. I highly recommend this clinic to anyone seeking quality dental care."</p>
-      <div class="testi-author"><div class="testi-avatar">ST</div><div><div class="testi-name">— SUPREET T </div><div class="testi-date">27 Jan 2025</div></div></div>
+      <p class="testi-text">I am extremely happy with the service. The doctor was kind, communicative, and understanding, making me feel comfortable throughout the treatment. I used to be afraid of hospitals, but this experience completely changed my perspective. I highly recommend this clinic to anyone seeking quality dental care.</p>
+      <div class="testi-author"><div class="testi-avatar">ST</div><div><div class="testi-name">— Supreet T</div><div class="testi-date">27 Jan 2025</div></div></div>
     </div>
     <div class="testi-card reveal">
       <div class="testi-stars">★★★★★</div>
-      <p class="testi-text">"My veneer issue was handled exceptionally well, and the treatment was completed smoothly and efficiently. The service offered excellent value for money, and the dentist was honest, professional, and trustworthy. Highly satisfied with the overall experience."</p>
-      <div class="testi-author"><div class="testi-avatar">SK</div><div><div class="testi-name">— Saja Kar </div><div class="testi-date">15 weeks ago</div></div></div>
+      <p class="testi-text">My veneer issue was handled exceptionally well, and the treatment was completed smoothly and efficiently. The service offered excellent value for money, and the dentist was honest, professional, and trustworthy. Highly satisfied with the overall experience.</p>
+      <div class="testi-author"><div class="testi-avatar">SK</div><div><div class="testi-name">— Saja Kar</div><div class="testi-date">15 weeks ago</div></div></div>
     </div>
   </div>
 </section>
-<style>
-  .testi-card{
-    background:#fff;
-    border-radius:20px;
-    padding:30px;
-    border:1px solid var(--border);
-    transition:all .3s;
-
-    display:flex;
-    flex-direction:column;
-    height:100%;
-}
-
-.testi-text{
-    flex-grow:1;
-}
-
-.testi-author{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-top:20px;
-}
-</style>
 
 <!-- HOURS & LOCATION -->
 <section class="info-section" id="contact" style="padding:0">
@@ -1743,7 +806,7 @@ function resetForm(){
     <div class="section-eyebrow">Hours</div>
     <h3 class="section-title" style="font-size:2rem">Clinic <em>Hours</em></h3>
     <table class="hours-table">
-      <tr class="today"><td>Monday</td><td>10:00 AM – 9:00 PM</td></tr>
+      <tr><td>Monday</td><td>10:00 AM – 9:00 PM</td></tr>
       <tr><td>Tuesday</td><td>10:00 AM – 9:00 PM</td></tr>
       <tr><td>Wednesday</td><td>10:00 AM – 9:00 PM</td></tr>
       <tr><td>Thursday</td><td>10:00 AM – 9:00 PM</td></tr>
@@ -1751,142 +814,76 @@ function resetForm(){
       <tr><td>Saturday</td><td>10:00 AM – 9:00 PM</td></tr>
       <tr><td>Sunday</td><td class="hours-closed">Sunday Closed</td></tr>
     </table>
-       <h6 style="margin-top:20px; font-size:1.15rem; font-weight:bold; color:#111; font-family:'Poppins',sans-serif; letter-spacing:0.4px;">
-    * Emergency Dental Care Available
-</h6>
+    <h6 style="margin-top:20px;font-size:1.15rem;font-weight:bold;color:#111;letter-spacing:.4px">
+      * Emergency Dental Care Available
+    </h6>
   </div>
-  
+
   <div class="info-block reveal">
     <div class="section-eyebrow">Find Us</div>
     <h3 class="section-title" style="font-size:2rem">Our <em>Location</em></h3>
-   <div class="map-placeholder"
-     onclick="window.open('https://maps.app.goo.gl/keRu7X133JnzxSjs9')">
-    🗺️
-    
-</div>
+    <div class="map-placeholder" onclick="window.open('https://maps.app.goo.gl/keRu7X133JnzxSjs9')">
+      <span class="map-label">🗺️ Open in Google Maps</span>
+    </div>
     <ul class="contact-list">
       <li><div class="contact-icon">📍</div> 930, AECS B Block, Wellington Paradise, Singasandra, Bengaluru, Karnataka 560114</li>
-    <li>
-    <div class="contact-icon">📞</div>
-    <span style="
-        font-weight:900;
-        color:black;
-        text-shadow:
-            0 0 5px rgba(255,255,255,.8),
-            0 0 10px rgba(255,255,255,.5),
-            0 0 15px rgba(255,255,255,.3);
-    ">
-        +91 6361169798
-    </span>
-</li>
-
-
+      <li><div class="contact-icon">📞</div> <span style="font-weight:900">+91 6361169798</span></li>
     </ul>
   </div>
 </section>
-<style>
-  .map-placeholder {
-   
-    background: url("images/map.png") center/cover no-repeat;
-    height: 300px; /* Adjust as needed */
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    color: white;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Optional dark overlay for better text visibility */
-.map-placeholder::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-}
-
-.map-placeholder > * {
-    position: relative;
-    z-index: 1;
-}
-</style>
 
 <!-- FAQ -->
 <section class="faq-section">
-
   <div style="text-align:center" class="reveal">
     <div class="section-eyebrow">FAQ</div>
     <h2 class="section-title">Common <em>Questions</em></h2>
   </div>
-
   <div class="faq-wrap">
-
     <div class="faq-item reveal">
       <button class="faq-q" onclick="toggleFaq(this)">
         How often should I visit the dentist?
         <span class="faq-icon">+</span>
       </button>
-      <div class="faq-a">
-        Every 6 months is recommended for a routine check-up and cleaning.
-      </div>
+      <div class="faq-a">Every 6 months is recommended for a routine check-up and cleaning.</div>
     </div>
-
     <div class="faq-item reveal">
       <button class="faq-q" onclick="toggleFaq(this)">
         Is teeth whitening safe?
         <span class="faq-icon">+</span>
       </button>
-      <div class="faq-a">
-        Yes, it is safe when done by a dentist using approved methods.
-      </div>
+      <div class="faq-a">Yes, it is safe when done by a dentist using approved methods.</div>
     </div>
-
     <div class="faq-item reveal">
       <button class="faq-q" onclick="toggleFaq(this)">
         Do dental treatments hurt?
         <span class="faq-icon">+</span>
       </button>
-      <div class="faq-a">
-        No, we use anesthesia to make treatments comfortable and pain-free.
-      </div>
+      <div class="faq-a">No, we use anesthesia to make treatments comfortable and pain-free.</div>
     </div>
-
     <div class="faq-item reveal">
       <button class="faq-q" onclick="toggleFaq(this)">
         Are dental X-rays safe?
         <span class="faq-icon">+</span>
       </button>
-      <div class="faq-a">
-        Yes, they use very low radiation and are completely safe.
-      </div>
+      <div class="faq-a">Yes, they use very low radiation and are completely safe.</div>
     </div>
-
     <div class="faq-item reveal">
       <button class="faq-q" onclick="toggleFaq(this)">
         What causes bad breath?
         <span class="faq-icon">+</span>
       </button>
-      <div class="faq-a">
-        Poor oral hygiene, plaque, and food particles are the main causes.
-      </div>
+      <div class="faq-a">Poor oral hygiene, plaque, and food particles are the main causes.</div>
     </div>
-
     <div class="faq-item reveal">
       <button class="faq-q" onclick="toggleFaq(this)">
         What are clear aligners?
         <span class="faq-icon">+</span>
       </button>
-      <div class="faq-a">
-       Clear aligners are transparent, removable orthodontic trays that gently straighten your teeth over time. They provide a discreet and comfortable alternative to traditional braces.
-      </div>
+      <div class="faq-a">Clear aligners are transparent, removable orthodontic trays that gently straighten your teeth over time. They provide a discreet and comfortable alternative to traditional braces.</div>
     </div>
-
   </div>
-
 </section>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-top">
@@ -1894,98 +891,57 @@ function resetForm(){
       <div class="footer-brand">Olive <span>Dental</span></div>
       <p class="footer-tagline">Modern dentistry with a gentle touch. Your family's smile is our lifelong commitment.</p>
       <div class="footer-social">
-       
-        <a class="social-btn" href="https://www.instagram.com/olive_dentals?utm_source=qr&igsh=ams0emtkZTRzNmJw" target="_blank" title="insta">
-    <img src="./images/intsaa.png" alt="insta" />
-</a>
-        
-             <a class="social-btn" href="https://www.youtube.com/@OliveDentalcare-l1k" target="_blank" title="youtube">
-    <img src="./images/youtube.jpg" alt="youtube" />
-</a>
-          <a class="social-btn" href="https://wa.me/message/4FF5ZLE7CIEVM1" target="_blank" title="whatsapp">
-    <img src="./images/whatsapp.jpg" alt="whatsapp" />
-</a>
+        <a class="social-btn" href="https://www.instagram.com/olive_dentals?utm_source=qr&igsh=ams0emtkZTRzNmJw" target="_blank" rel="noopener" title="Instagram">
+          <img src="./images/intsaa.png" alt="Instagram">
+        </a>
+        <a class="social-btn" href="https://www.youtube.com/@OliveDentalcare-l1k" target="_blank" rel="noopener" title="YouTube">
+          <img src="./images/youtube.jpg" alt="YouTube">
+        </a>
+        <a class="social-btn" href="https://wa.me/message/4FF5ZLE7CIEVM1" target="_blank" rel="noopener" title="WhatsApp">
+          <img src="./images/whatsapp.jpg" alt="WhatsApp">
+        </a>
       </div>
     </div>
     <div class="footer-col">
       <h5>Services</h5>
       <ul>
-        <li><a href="#">   Consultation</a></li>
-         <li><a href="#">   Digital X-ray</a></li>
-         
-        <li><a href="#">Teeth Whitening</a></li>
-         <li><a href="#">Root Canal Treatment</a></li>
-            <li><a href="#">Braces and Clear Aligners</a></li>
-            <li><a href="#">    Crowns and Veneers</a></li>
-            <li><a href="#">     Dental Implants</a></li>
-            <li><a href="#">   Dental Dentistry</a></li>
-            <li><a href="#">   Laser Dentistry</a></li>
-            <li><a href="#">   Intraoral Scanning</a></li>
-            <li><a href="#">    Paediatic Dentistry</a></li>
-        <li><a href="#">Orthodontics</a></li>
-        
-       
+        <li><a href="#services">Consultation</a></li>
+        <li><a href="#services">Digital X-ray</a></li>
+        <li><a href="#services">Teeth Whitening</a></li>
+        <li><a href="#services">Root Canal Treatment</a></li>
+        <li><a href="#services">Braces and Clear Aligners</a></li>
+        <li><a href="#services">Crowns and Veneers</a></li>
+        <li><a href="#services">Dental Implants</a></li>
+        <li><a href="#services">Dental Dentistry</a></li>
+        <li><a href="#services">Laser Dentistry</a></li>
+        <li><a href="#services">Intraoral Scanning</a></li>
+        <li><a href="#services">Paediatic Dentistry</a></li>
+        <li><a href="#services">Orthodontics</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h5>Clinic</h5>
       <ul>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Smile Gallery</a></li>
-        <li><a href="#">Testimonials</a></li>
-      
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#smile-gallery">Smile Gallery</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h5>Support</h5>
       <ul>
-        <li><a href="#">Book Appointment</a></li>
-         <li><a href="#">No Cost EMI</a></li>
-        
-      
+        <li><a href="#booking">Book Appointment</a></li>
+        <li><a href="#">No Cost EMI</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
     <span>© 2026 Olive Dental Clinic. All rights reserved.</span>
     <span>Powered by <a href="https://nexoria-ten.vercel.app" target="_blank" rel="noopener">Nexobova JwJtp</a></span>
-    <span>
-     
-      <a href="#">Sitemap</a>
-    </span>
+    <span><a href="#">Sitemap</a></span>
   </div>
 </footer>
-<style>
-  .social-btn{
-    width: 35px;
-    height:35px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#fff;
-    overflow:hidden;
-    transition:0.3s ease;
-    box-shadow:0 5px 15px rgba(0,0,0,0.15);
-}
 
-.social-btn img{
-    width: 40px;
-    height:40px;
-    object-fit:contain;
-    display:block;
-    transition:0.3s ease;
-}
-
-.social-btn:hover{
-    transform:translateY(-4px);
-    box-shadow:0 10px 25px rgba(0,0,0,0.25);
-}
-
-.social-btn:hover img{
-    transform:scale(1.1);
-}
-</style>
 <script>
 // ── CURSOR ──
 const cursor = document.getElementById('cursor');
@@ -1999,7 +955,8 @@ function animRing(){
   rx+=(mx-rx-16)*0.12; ry+=(my-ry-16)*0.12;
   ring.style.left=rx+'px'; ring.style.top=ry+'px';
   requestAnimationFrame(animRing);
-}animRing();
+}
+animRing();
 document.querySelectorAll('button,a,[onclick]').forEach(el=>{
   el.addEventListener('mouseenter',()=>{cursor.style.transform='scale(2.5)';ring.style.transform='scale(1.5)'});
   el.addEventListener('mouseleave',()=>{cursor.style.transform='';ring.style.transform=''});
@@ -2027,8 +984,6 @@ const obs = new IntersectionObserver(entries=>{
 },{threshold:.12});
 revealEls.forEach(el=>obs.observe(el));
 
-
-
 // ── FAQ ──
 function toggleFaq(btn){
   const item = btn.parentElement;
@@ -2037,12 +992,79 @@ function toggleFaq(btn){
   if(!wasOpen) item.classList.add('open');
 }
 
+// ── BOOKING FORM ──
+function submitBooking(){
+  const fname = document.getElementById("fname").value;
+  const lname = document.getElementById("lname").value;
+  const phone = document.getElementById("phone").value;
+  const email = document.getElementById("email").value;
+  const service = document.getElementById("service").value;
+  const date = document.getElementById("date").value;
+  const time = document.getElementById("time").value;
+  const notes = document.getElementById("notes").value;
+
+  if(fname === "" || phone === "" || email === "" || service === "" || date === "" || time === ""){
+    alert("Please fill all required fields.");
+    return;
+  }
+
+  document.getElementById("success-name").innerHTML = fname + " " + lname;
+  document.getElementById("booking-form-inner").style.display = "none";
+  document.getElementById("booking-success").style.display = "flex";
+
+  const whatsappNumber = "916361169798";
+  const message =
+`Hello Olive Dental Clinic
+
+New Appointment Request 🦷
+
+👤 Name:
+${fname} ${lname}
+
+📞 Phone:
+${phone}
+
+📧 Email:
+${email}
+
+🩺 Service:
+${service}
+
+📅 Date:
+${date}
+
+⏰ Time:
+${time}
+
+📝 Notes:
+${notes}`;
+
+  const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  window.open(whatsappURL, "_blank");
+}
+
+function resetForm(){
+  document.getElementById("booking-form-inner").style.display = "block";
+  document.getElementById("booking-success").style.display = "none";
+  document.getElementById("fname").value = "";
+  document.getElementById("lname").value = "";
+  document.getElementById("phone").value = "";
+  document.getElementById("email").value = "";
+  document.getElementById("service").value = "";
+  document.getElementById("date").value = "";
+  document.getElementById("time").value = "";
+  document.getElementById("notes").value = "";
+}
+
 // ── HIGHLIGHT TODAY ──
-const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const todayName=days[today.getDay()];
+// (Fixed: "today" was used without being defined, so this silently threw an
+// error and the current day was never highlighted in the hours table.)
+const today = new Date();
+const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const todayName = days[today.getDay()];
 document.querySelectorAll('.hours-table tr').forEach(row=>{
-  const td=row.querySelector('td');
-  if(td&&td.textContent.trim()===todayName) row.classList.add('today');
+  const td = row.querySelector('td');
+  if(td && td.textContent.trim() === todayName) row.classList.add('today');
   else row.classList.remove('today');
 });
 </script>
